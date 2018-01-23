@@ -1,32 +1,67 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import Server from './Server';
 import AccountsAndKeys from './AccountsAndKeys';
 import {
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom';
 
 class Configuration extends Component {
   constructor(props) {
     super(props);
-    console.log(props.match);
-
+    this.state = {
+      redirect: false
+    };
   }
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Configuration</h1>
-        </header>
-        <ul className="App-intro">
-          <li><Link to={`${this.props.match.url}/server`}>Server</Link></li>
-          <li><Link to={`${this.props.match.url}/accounts-and-keys`}>accounts-and-keys</Link></li>
-        </ul>
-        <Route path={`${this.props.match.url}/server`} component={Server}/>
-        <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeys}/>
 
+  resetNibble() {
+    this.setState({
+      redirect: true
+    })
+  }
+
+  handleTotalAccountsChange(totalAccounts) {
+    this.props.handleTotalAccountsChange(totalAccounts);
+  }
+
+  handleMnemonicChange(mnemonic) {
+    this.props.handleMnemonicChange(mnemonic);
+  }
+
+  handleAutoGenerateChange(mnemonic) {
+    this.props.handleAutoGenerateChange(mnemonic);
+  }
+
+  render() {
+
+    if (this.state.redirect) {
+      this.props.resetNibble({});
+      return <Redirect to='/'/>;
+    }
+
+    const AccountsAndKeysPage = (props) => {
+      return (
+        <AccountsAndKeys
+          handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
+          handleMnemonicChange={this.handleMnemonicChange.bind(this)}
+          handleAutoGenerateChange={this.handleAutoGenerateChange.bind(this)}
+          totalAccounts={this.props.totalAccounts}
+          mnemonic={this.props.mnemonic}
+          autogenerate={this.props.autogenerate}
+          resetNibble={this.resetNibble.bind(this)}
+        />
+      );
+    };
+
+            // <li><Link to={`${this.props.match.url}/server`}>Server</Link></li>
+          // <Route path={`${this.props.match.url}/server`} component={Server}/>
+    return (
+      <div className="Configuration">
+        <div className="content">
+          <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeysPage}/>
+
+        </div>
       </div>
     );
   }
