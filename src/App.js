@@ -50,7 +50,6 @@ class App extends Component {
   }
 
   createHDWallet(config) {
-    console.log(config);
     if(!config.mnemonic && config.autogenerate) {
       config.mnemonic = BIP39.entropyToMnemonic(
         crypto.randomBytes(16).toString('hex'),
@@ -63,17 +62,17 @@ class App extends Component {
       Bitcoin.networks[this.state.configuration.wallet.network],
     );
 
-    const account = masterkey
-      .deriveHardened(44)
-      .deriveHardened(0)
-      .deriveHardened(0);
+    var path = "m/44'/60'/0'/0";
+    const account = masterkey.derivePath(path);
+
+    const yay= masterkey.derivePath(path).toBase58();
     const addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
       addresses.push(
-        account
-          .derive(0)
-          .derive(i)
-          .getAddress(),
+        {
+          public: account.derive(i).getAddress(),
+          private: account.derive(i).keyPair.toWIF(),
+        }
       );
     }
     this.setState({
@@ -127,7 +126,6 @@ class App extends Component {
     };
 
     const ConfigurationPage = (props) => {
-      console.log(this);
       return (
         <Configuration
           match={props.match}
@@ -146,9 +144,9 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <div className="header">
+          <div className="header main-header">
             <div className="pure-menu pure-menu-horizontal">
-              <a className="pure-menu-heading" href="">BitBox</a>
+              <Link className="pure-menu-heading" to="/">BitBox</Link>
               <ul className="pure-menu-list">
                 <li className="pure-menu-item pure-menu-selected"><Link className="pure-menu-link" to="/">Wallet</Link></li>
                 <li className="pure-menu-item"><Link className="pure-menu-link" to="/blocks">Blocks</Link></li>

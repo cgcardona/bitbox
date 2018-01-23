@@ -231,7 +231,7 @@ a.pure-button-primary {
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin: 2em 0 1em;
+    /* margin: 2em 0 1em; */
 }
 
 /* This is a modifier class used when the content-head is inside a ribbon */
@@ -316,4 +316,71 @@ a.pure-button-primary {
     .splash-head {
         font-size: 300%;
     }
+}
+
+.main-header {
+  background: #2d3e50;
+}
+
+.main-header a {
+  color: #6FBEF3;
+}
+
+.main-header .pure-menu-selected a.pure-menu-link {
+  color: #fff;
+}
+
+.Wallet ul {
+  list-style-type: none;
+  color: #34495e;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.Wallet ul.header li, .Wallet ul.subheader li {
+  display: inline;
+}
+
+.Wallet ul.subhead {
+  font-size: 1.1em;
+}
+
+.Wallet ul.header {
+  font-size: 1.1em;
+}
+
+.Wallet.content {
+  padding: 1em 0;
+}
+
+.pure-table {
+  width: 100%;
+  border: none;
+}
+
+.pure-table tbody {
+  border-style: solid;
+  border-color: #2d3e50;
+  border-width: 0 0 1px 0;
+}
+
+.pure-table tr {
+  border-style: solid;
+  border-color: #2d3e50;
+  border-width: 1px 0 0 0;
+}
+
+.pure-table td {
+  padding: 1em;
+  border: none;
+  line-height: 1.1em;
+  color: #2d3e50;
+  font-weight: bold;
+}
+
+.pure-table td .subheader {
+  font-size: 0.75em;
+  padding-bottom: 0;
+  color: #2d3e50;
+  font-weight: normal;
 }
