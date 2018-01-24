@@ -60,7 +60,7 @@ class App extends Component {
     }
 
     if(!config.path && config.autogeneratePath) {
-    // if(true) {
+    // // if(true) {
       let depth = Math.floor(Math.random() * 11);
 
       let path = "m/44'/0'";
@@ -72,10 +72,9 @@ class App extends Component {
     }
 
     const seed = BIP39.mnemonicToSeed(config.mnemonic, '');
-    const masterkey = Bitcoin.HDNode.fromSeedBuffer(
-      seed,
-      Bitcoin.networks[this.state.configuration.wallet.network],
-    );
+    console.log('seed: ', seed);
+    console.log('network: ', Bitcoin.networks[this.state.configuration.wallet.network]);
+    const masterkey = Bitcoin.HDNode.fromSeedBuffer(seed, Bitcoin.networks[this.state.configuration.wallet.network]);
 
     const account = masterkey.derivePath(config.path);
 
