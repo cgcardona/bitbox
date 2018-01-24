@@ -50,7 +50,7 @@ class AccountsAndKeys extends Component {
     let customMnemonic;
     let customMnemonicLabel;
     if(!this.state.autogenerate) {
-      customMnemonicLabel = <label for="name">Enter the Mnemonic you wish to use</label>;
+      customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
       customMnemonic = <input type='text' placeholder="Enter mnemonic to use" value={this.state.mnemonic} onChange={this.handleMnemonicChange.bind(this)} />;
     }
 
@@ -64,10 +64,10 @@ class AccountsAndKeys extends Component {
                 <button className="pure-button" onClick={this.resetNibble.bind(this)}>Restart</button>
 
 
-                <label for="name">Total number of accounts to generate</label>
+                <label>Total number of accounts to generate</label>
                 <input type='number' placeholder="Number of accounts" value={this.state.totalAccounts} onChange={this.handleTotalAccountsChange.bind(this)} />
 
-                <label for="name">Autogenerate HD Mnemonie</label>
+                <label>Autogenerate HD Mnemonie</label>
                 <input type="checkbox" checked={this.state.autogenerate} onChange={this.handleAutoGenerateChange.bind(this)} />
 
                 {customMnemonicLabel}

@@ -384,3 +384,7 @@ a.pure-button-primary {
   color: #2d3e50;
   font-weight: normal;
 }
+
+.danger {
+  color: red;
+}
