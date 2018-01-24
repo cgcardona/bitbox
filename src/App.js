@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
+import Blockchain from './components/Blockchain';
 import Transactions from './components/Transactions';
 import Logs from './components/Logs';
 import Configuration from './components/Configuration';
@@ -27,6 +28,7 @@ class App extends Component {
     this.state = {
       mnemonic: '',
       addresses: [],
+      blockchainInstance: '',
       configuration: {
         wallet: {
           createNewWallet: true,
@@ -50,6 +52,10 @@ class App extends Component {
         configuration: config
       });
     }
+    let BlockchainInstance= new Blockchain(0, Date.now(), {amount: "Chancellor on the brink of bailouts"}, "0");
+    this.setState({
+      blockchainInstance: BlockchainInstance
+    });
   }
 
   createHDWallet(config) {
@@ -139,6 +145,12 @@ class App extends Component {
     }
   }
 
+  handleBlockchainUpdate(blockchain) {
+    this.setState({
+      blockchainInstance: blockchain
+    })
+  }
+
   render() {
 
   const pathMatch = (match, location) => {
@@ -160,6 +172,16 @@ class App extends Component {
           mnemonic={this.state.mnemonic}
           path={this.state.path}
           addresses={this.state.addresses}
+        />
+      );
+    };
+
+    const BlocksPage = (props) => {
+      return (
+        <Blocks
+          match={props.match}
+          blockchainInstance={this.state.blockchainInstance}
+          handleBlockchainUpdate={this.handleBlockchainUpdate.bind(this)}
         />
       );
     };
@@ -239,7 +261,7 @@ class App extends Component {
           </div>
 
           <Route exact path="/" component={WalletPage}/>
-          <Route path="/blocks" component={Blocks}/>
+          <Route path="/blocks" component={BlocksPage}/>
           <Route path="/transactions" component={Transactions}/>
           <Route path="/logs" component={Logs}/>
           <Route path="/configuration" component={ConfigurationPage}/>

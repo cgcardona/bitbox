@@ -1,50 +1,41 @@
 import React, { Component } from 'react';
 import Block from './Block';
 import Blockchain from './Blockchain';
+import AccountsAndKeys from './AccountsAndKeys';
+import {
+  Route,
+  Link,
+  Redirect
+} from 'react-router-dom';
 
 class Blocks extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      bitcoinCashBlockchain: '',
-      index: 0
-    };
 
-    // bitcoinCashBlockchain.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
+    // blockchainInstance.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
 
     // Check if chain is valid (will return true)
-    // console.log('Blockchain valid? ' + bitcoinCashBlockchain.isChainValid());
+    // console.log('Blockchain valid? ' + blockchainInstance.isChainValid());
 
     // Let's now manipulate the data
-    // bitcoinCashBlockchain.chain[1].data = { amount: 100 };
+    // blockchainInstance.chain[1].data = { amount: 100 };
 
     // Check our chain again (will now return false)
-    // console.log("Blockchain valid? " + bitcoinCashBlockchain.isChainValid());
-  }
-
-  componentDidMount() {
-    let BlockchainInstance= new Blockchain(0, Date.now(), {amount: "Chancellor on the brink of bailouts"}, "0");
-    let chain = BlockchainInstance.chain;
-    this.setState({
-      bitcoinCashBlockchain: BlockchainInstance,
-      chain: chain
-    });
+    // console.log("Blockchain valid? " + blockchainInstance.isChainValid());
   }
 
   createBlock() {
-    let index = this.state.index + 1;
-    let blockchain = this.state.bitcoinCashBlockchain;
-    blockchain.addBlock(new Block(index, Date.now(), { amount: 4 }));
-    this.setState({
-      index: index,
-      chain: blockchain.chain
-    });
+    // let index = this.state.index + 1;
+    let blockchain = this.props.blockchainInstance;
+    blockchain.addBlock(new Block(blockchain.chain.length, Date.now(), { amount: 4 }));
+    this.props.handleBlockchainUpdate(blockchain);
   }
 
   render() {
+        // <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeys}/>
     let blocks = [];
-    if(this.state.bitcoinCashBlockchain && this.state.bitcoinCashBlockchain.chain.length) {
-      this.state.bitcoinCashBlockchain.chain.forEach((block) => {
+    if(this.props.blockchainInstance && this.props.blockchainInstance.chain.length) {
+      this.props.blockchainInstance.chain.forEach((block) => {
         blocks.push(<div key={block.index}>
           <p> Index: {block.index} </p>
           <p> Previous Hash: {block.previousHash} </p>
