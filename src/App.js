@@ -238,14 +238,6 @@ class App extends Component {
                     to="/transactions">Transactions
                   </NavLink>
                 </li>
-                <li className="pure-menu-item">
-                  <NavLink
-                    isActive={pathMatch}
-                    activeClassName="pure-menu-selected"
-                    className="pure-menu-link"
-                    to="/logs">Logs
-                  </NavLink>
-                </li>
               </ul>
               <ul className="pure-menu-list right">
                 <li className="pure-menu-item">
@@ -263,7 +255,6 @@ class App extends Component {
           <Route exact path="/" component={WalletPage}/>
           <Route path="/blocks" component={BlocksPage}/>
           <Route path="/transactions" component={Transactions}/>
-          <Route path="/logs" component={Logs}/>
           <Route path="/configuration" component={ConfigurationPage}/>
         </div>
       </Router>

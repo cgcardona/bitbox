@@ -32,7 +32,7 @@ class Wallet extends Component {
             <tbody>
               {list}
             </tbody>
-        </table>
+          </table>
         </div>
       </div>
     );

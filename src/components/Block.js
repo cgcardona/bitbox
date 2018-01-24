@@ -16,12 +16,17 @@ class Block extends Component {
   }
 
   render() {
+    let date = new Date(this.props.block.timestamp);
     return (
-      <div className="Block">
-        block
-      </div>
+      <tr className="Block">
+        <td><span className='subheader'>HEIGHT</span> <br />{this.props.block.index}</td>
+        <td><span className='subheader'>MINED ON</span> <br />{date.toString()}</td>
+        <td><span className='subheader'>HASH</span> <br />{this.props.block.hash}</td>
+        <td><span className='subheader'>TX COUNT</span> <br />1</td>
+      </tr>
     );
   }
 }
+
 
 export default Block;

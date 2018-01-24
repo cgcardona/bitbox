@@ -36,23 +36,23 @@ class Blocks extends Component {
     let blocks = [];
     if(this.props.blockchainInstance && this.props.blockchainInstance.chain.length) {
       this.props.blockchainInstance.chain.forEach((block) => {
-        blocks.push(<div key={block.index}>
-          <p> Index: {block.index} </p>
-          <p> Previous Hash: {block.previousHash} </p>
-          <p> Timestamp: {block.timestamp} </p>
-          <p> Data: {block.data.amount} </p>
-          <p> Hash: {block.hash} </p>
-          </div>
-        );
+        blocks.push(<Block block={block} key={block.hash} />);
       });
     }
     return (
       <div className="Blocks">
-        <h1 className="App-title">Blocks</h1>
-        <p className="App-intro">
-          <button onClick={this.createBlock.bind(this)}>Create block</button>
-        </p>
-        {blocks}
+        <div className="pure-u-1-1">
+          <table className="pure-table">
+            <tbody>
+              <tr className="Block">
+                <td>
+                  <button className='pure-button' onClick={this.createBlock.bind(this)}>Create block</button>
+                </td>
+              </tr>
+              {blocks}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
