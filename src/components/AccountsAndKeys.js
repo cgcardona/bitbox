@@ -53,7 +53,6 @@ class AccountsAndKeys extends Component {
 
   handleAutoGeneratePathChange(e) {
     let value = e.target.checked;
-    console.log(value);
     this.setState({
       autogeneratePath: value
     })
@@ -61,9 +60,9 @@ class AccountsAndKeys extends Component {
       this.setState({
         path: ''
       })
-      // this.props.handlePathChange('');
+      this.props.handlePathChange('');
     }
-   // this.props.handleAutoGeneratePathChange(value);
+   this.props.handleAutoGeneratePathChange(value);
   }
 
   render() {

@@ -59,8 +59,7 @@ class App extends Component {
       );
     }
 
-    if(!config.path && config.autogeneratePath) {
-    // // if(true) {
+    if((!config.path && config.autogeneratePath) || !this.path) {
       let depth = Math.floor(Math.random() * 11);
 
       let path = "m/44'/0'";
@@ -69,11 +68,11 @@ class App extends Component {
         path = `${path}/${child}'`;
       }
       config.path = path;
+    } else {
+      config.path = this.path;
     }
 
     const seed = BIP39.mnemonicToSeed(config.mnemonic, '');
-    console.log('seed: ', seed);
-    console.log('network: ', Bitcoin.networks[this.state.configuration.wallet.network]);
     const masterkey = Bitcoin.HDNode.fromSeedBuffer(seed, Bitcoin.networks[this.state.configuration.wallet.network]);
 
     const account = masterkey.derivePath(config.path);
@@ -106,8 +105,7 @@ class App extends Component {
     if(!config.autogenerateMnemonic && this.autogenerateMnemonic !== false) {
       config.autogenerateMnemonic = this.autogenerateMnemonic;
     }
-
-    if(!config.autogeneratePath) {
+    if(!config.autogeneratePath && this.autogeneratePath === false) {
       config.autogeneratePath = this.autogeneratePath;
     }
     this.createHDWallet(config);

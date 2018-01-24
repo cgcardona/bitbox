@@ -6,6 +6,7 @@ import {
   Redirect
 } from 'react-router-dom';
 
+
 class Configuration extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +51,7 @@ class Configuration extends Component {
     const AccountsAndKeysPage = (props) => {
       return (
         <AccountsAndKeys
-          handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
+          handleTotalAccountsChange={this.props.handleTotalAccountsChange.bind(this)}
           handleMnemonicChange={this.handleMnemonicChange.bind(this)}
           handlePathChange={this.handlePathChange.bind(this)}
           handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
