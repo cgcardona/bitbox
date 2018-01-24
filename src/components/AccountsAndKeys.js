@@ -6,8 +6,10 @@ class AccountsAndKeys extends Component {
 
     this.state = {
       mnemonic: this.props.mnemonic,
+      path: this.props.path,
       totalAccounts: this.props.totalAccounts,
-      autogenerate: this.props.autogenerate
+      autogenerateMnemonic: this.props.autogenerateMnemonic,
+      autogeneratePath: this.props.autogeneratePath
     }
   }
 
@@ -19,6 +21,14 @@ class AccountsAndKeys extends Component {
    this.props.handleMnemonicChange(value);
   }
 
+  handlePathChange(e) {
+    let value = e.target.value;
+    this.setState({
+      path: value
+    })
+   this.props.handlePathChange(value);
+  }
+
   handleTotalAccountsChange(e) {
     let value = e.target.value;
     this.setState({
@@ -27,10 +37,10 @@ class AccountsAndKeys extends Component {
    this.props.handleTotalAccountsChange(value);
   }
 
-  handleAutoGenerateChange(e) {
+  handleAutoGenerateMnemonicChange(e) {
     let value = e.target.checked;
     this.setState({
-      autogenerate: value
+      autogenerateMnemonic: value
     })
     if(value) {
       this.setState({
@@ -38,20 +48,38 @@ class AccountsAndKeys extends Component {
       })
       this.props.handleMnemonicChange('');
     }
-   this.props.handleAutoGenerateChange(value);
+   this.props.handleAutoGenerateMnemonicChange(value);
   }
 
-  resetNibble() {
-    this.props.resetNibble();
+  handleAutoGeneratePathChange(e) {
+    let value = e.target.checked;
+    console.log(value);
+    this.setState({
+      autogeneratePath: value
+    })
+    if(value) {
+      this.setState({
+        path: ''
+      })
+      // this.props.handlePathChange('');
+    }
+   // this.props.handleAutoGeneratePathChange(value);
   }
 
   render() {
         // <p id='newRobotName'>Name: <input type='text' placeholder="Robot Name" value={this.state.robotName} onChange={this.handleRobotNameChange.bind(this)} /></p>
-    let customMnemonic;
     let customMnemonicLabel;
-    if(!this.state.autogenerate) {
+    let customMnemonic;
+    if(!this.state.autogenerateMnemonic) {
       customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
       customMnemonic = <input type='text' placeholder="Enter mnemonic to use" value={this.state.mnemonic} onChange={this.handleMnemonicChange.bind(this)} />;
+    }
+    //
+    let customPathLabel;
+    let customPath;
+    if(!this.state.autogeneratePath) {
+      customPathLabel = <input type='text' placeholder="Enter HD path to use" value={this.state.path} onChange={this.handlePathChange.bind(this)} />;
+      customPath = <label>Enter the HD path you wish to use</label>;
     }
 
     return (
@@ -61,17 +89,22 @@ class AccountsAndKeys extends Component {
           <div className="l-box-lrg pure-u-1 pure-u-md-2-5">
             <form className="pure-form pure-form-stacked">
               <fieldset>
-                <button className="pure-button" onClick={this.resetNibble.bind(this)}>Restart</button>
+                <button className="pure-button" onClick={this.props.resetNibble.bind(this)}>Restart</button>
 
 
                 <label>Total number of accounts to generate</label>
                 <input type='number' placeholder="Number of accounts" value={this.state.totalAccounts} onChange={this.handleTotalAccountsChange.bind(this)} />
 
-                <label>Autogenerate HD Mnemonie</label>
-                <input type="checkbox" checked={this.state.autogenerate} onChange={this.handleAutoGenerateChange.bind(this)} />
-
+                <label>Autogenerate HD Mnemonic</label>
+                <input type="checkbox" checked={this.state.autogenerateMnemonic} onChange={this.handleAutoGenerateMnemonicChange.bind(this)} />
                 {customMnemonicLabel}
                 {customMnemonic}
+
+                <label>Autogenerate HD Path</label>
+                <input type="checkbox" checked={this.state.autogeneratePath} onChange={this.handleAutoGeneratePathChange.bind(this)} />
+
+                {customPathLabel}
+                {customPath}
               </fieldset>
             </form>
           </div>

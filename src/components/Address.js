@@ -11,7 +11,6 @@ class Address extends Component {
   }
 
   showKey(key) {
-    console.log('show: ', key);
     this.setState({
       address: key,
       showPrivKey: true
@@ -19,7 +18,6 @@ class Address extends Component {
   }
 
   hideKey(key) {
-    console.log('hide: ', key);
     this.setState({
       showPrivKey: false,
       address: key
@@ -30,12 +28,9 @@ class Address extends Component {
     let btn;
     let address;
     if(this.state.showPrivKey) {
-      console.log('true');
       btn = <td><button onClick={this.hideKey.bind(this, this.props.address.public)}>Hide key</button></td>;
       address = <span className='danger'>{this.state.address}</span>;
-
     } else {
-      console.log('fals');
       btn = <td><button onClick={this.showKey.bind(this, this.props.address.private)}>Show key</button></td>;
       address = <span className='success'>{this.state.address}</span>;
     }

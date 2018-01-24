@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Server from './Server';
 import AccountsAndKeys from './AccountsAndKeys';
 import {
   Route,
@@ -29,8 +28,16 @@ class Configuration extends Component {
     this.props.handleMnemonicChange(mnemonic);
   }
 
-  handleAutoGenerateChange(mnemonic) {
-    this.props.handleAutoGenerateChange(mnemonic);
+  handlePathChange(path) {
+    this.props.handlePathChange(path);
+  }
+
+  handleAutoGenerateMnemonicChange(autogenerateMnemonic) {
+    this.props.handleAutoGenerateMnemonicChange(autogenerateMnemonic);
+  }
+
+  handleAutoGeneratePathChange(autogeneratePath) {
+    this.props.handleAutoGeneratePathChange(autogeneratePath);
   }
 
   render() {
@@ -45,10 +52,14 @@ class Configuration extends Component {
         <AccountsAndKeys
           handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
           handleMnemonicChange={this.handleMnemonicChange.bind(this)}
-          handleAutoGenerateChange={this.handleAutoGenerateChange.bind(this)}
+          handlePathChange={this.handlePathChange.bind(this)}
+          handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
+          handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
           totalAccounts={this.props.totalAccounts}
           mnemonic={this.props.mnemonic}
-          autogenerate={this.props.autogenerate}
+          path={this.props.path}
+          autogenerateMnemonic={this.props.autogenerateMnemonic}
+          autogeneratePath={this.props.autogeneratePath}
           resetNibble={this.resetNibble.bind(this)}
         />
       );

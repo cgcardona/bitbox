@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import Address from './Address';
 
 class Wallet extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let list = [];
     if (this.props.addresses.length) {
@@ -30,7 +26,7 @@ class Wallet extends Component {
           </ul>
           <ul className='header'>
             <li className='content-head'>{this.props.mnemonic}</li>
-            <li className='content-head right'>{"m/44'/60'/0'/0"}</li>
+            <li className='content-head right'>{this.props.path}</li>
           </ul>
           <table className="pure-table">
             <tbody>

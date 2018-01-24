@@ -326,7 +326,7 @@ a.pure-button-primary {
   color: #6FBEF3;
 }
 
-.main-header .pure-menu-selected a.pure-menu-link {
+.main-header a.pure-menu-link.pure-menu-selected {
   color: #fff;
 }
 

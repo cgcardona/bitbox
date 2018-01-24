@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Link
+  Link,
+  NavLink
 } from 'react-router-dom';
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
@@ -17,7 +18,9 @@ const crypto = require('crypto');
 class App extends Component {
   totalAccounts = 10;
   mnemonic = '';
-  autogenerate = true;
+  path = '';
+  autogenerateMnemonic = true;
+  autogeneratePath = true;
 
   constructor(props) {
     super(props);
@@ -38,8 +41,8 @@ class App extends Component {
     if(this.state.configuration.wallet.createNewWallet) {
       this.createHDWallet({
         totalAccounts: this.totalAccounts,
-        mnemonic: this.mnemonic,
-        autogenerate: this.autogenerate
+        autogenerateMnemonic: this.autogenerateMnemonic,
+        autogeneratePath: this.autogeneratePath
       });
       let config = this.state.configuration;
       config.createNewBlockchain = false;
@@ -50,10 +53,22 @@ class App extends Component {
   }
 
   createHDWallet(config) {
-    if(!config.mnemonic && config.autogenerate) {
+    if(!config.mnemonic && config.autogenerateMnemonic) {
       config.mnemonic = BIP39.entropyToMnemonic(
         crypto.randomBytes(16).toString('hex'),
       );
+    }
+
+    if(!config.path && config.autogeneratePath) {
+    // if(true) {
+      let depth = Math.floor(Math.random() * 11);
+
+      let path = "m/44'/0'";
+      for(let i = 0; i <= depth; i++) {
+        let child = Math.floor(Math.random() * 100);
+        path = `${path}/${child}'`;
+      }
+      config.path = path;
     }
 
     const seed = BIP39.mnemonicToSeed(config.mnemonic, '');
@@ -62,10 +77,8 @@ class App extends Component {
       Bitcoin.networks[this.state.configuration.wallet.network],
     );
 
-    var path = "m/44'/60'/0'/0";
-    const account = masterkey.derivePath(path);
+    const account = masterkey.derivePath(config.path);
 
-    const yay= masterkey.derivePath(path).toBase58();
     const addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
       addresses.push(
@@ -77,6 +90,7 @@ class App extends Component {
     }
     this.setState({
       mnemonic: config.mnemonic,
+      path: config.path,
       addresses: addresses,
     });
   }
@@ -90,8 +104,12 @@ class App extends Component {
       config.mnemonic = this.mnemonic;
     }
 
-    if(!config.autogenerate && this.autogenerate !== false) {
-      config.autogenerate = this.autogenerate;
+    if(!config.autogenerateMnemonic && this.autogenerateMnemonic !== false) {
+      config.autogenerateMnemonic = this.autogenerateMnemonic;
+    }
+
+    if(!config.autogeneratePath) {
+      config.autogeneratePath = this.autogeneratePath;
     }
     this.createHDWallet(config);
   }
@@ -100,15 +118,38 @@ class App extends Component {
     this.mnemonic = mnemonic;
   }
 
+  handlePathChange(path) {
+    this.path = path;
+  }
+
   handleTotalAccountsChange(totalAccounts) {
     this.totalAccounts = totalAccounts;
   }
 
-  handleAutoGenerateChange(autogenerate) {
-    this.autogenerate = autogenerate;
+  handleAutoGenerateMnemonicChange(autogenerateMnemonic) {
+    this.autogenerateMnemonic = autogenerateMnemonic;
+  }
+
+  handleAutoGeneratePathChange(autogeneratePath) {
+    this.autogeneratePath = autogeneratePath;
+  }
+
+  handlePathMatch(path) {
+    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/logs' || path === '/configuration/accounts-and-keys') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   render() {
+
+  const pathMatch = (match, location) => {
+    if (!match) {
+      return false
+    }
+    return this.handlePathMatch(match.path);
+  }
     let list = []
     if (this.state.addresses.length) {
       this.state.addresses.forEach(address => {
@@ -120,6 +161,7 @@ class App extends Component {
       return (
         <Wallet
           mnemonic={this.state.mnemonic}
+          path={this.state.path}
           addresses={this.state.addresses}
         />
       );
@@ -132,10 +174,14 @@ class App extends Component {
           resetNibble={this.resetNibble.bind(this)}
           totalAccounts={this.totalAccounts}
           mnemonic={this.state.mnemonic}
-          autogenerate={this.autogenerate}
+          path={this.state.path}
+          autogenerateMnemonic={this.autogenerateMnemonic}
+          autogeneratePath={this.autogeneratePath}
           handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
           handleMnemonicChange={this.handleMnemonicChange.bind(this)}
-          handleAutoGenerateChange={this.handleAutoGenerateChange.bind(this)}
+          handlePathChange={this.handlePathChange.bind(this)}
+          handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
+          handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
         />
       );
     };
@@ -148,13 +194,49 @@ class App extends Component {
             <div className="pure-menu pure-menu-horizontal">
               <Link className="pure-menu-heading" to="/">BitBox</Link>
               <ul className="pure-menu-list">
-                <li className="pure-menu-item pure-menu-selected"><Link className="pure-menu-link" to="/">Wallet</Link></li>
-                <li className="pure-menu-item"><Link className="pure-menu-link" to="/blocks">Blocks</Link></li>
-                <li className="pure-menu-item"><Link className="pure-menu-link" to="/transactions">Transactions</Link></li>
-                <li className="pure-menu-item"><Link className="pure-menu-link" to="/logs">Logs</Link></li>
+
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/">Wallet
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/blocks">Blocks
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/transactions">Transactions
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/logs">Logs
+                  </NavLink>
+                </li>
               </ul>
               <ul className="pure-menu-list right">
-                <li className="pure-menu-item"><Link className="pure-menu-link" to="/configuration/accounts-and-keys">Configuration</Link></li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/configuration/accounts-and-keys">Configuration
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>
