@@ -3,11 +3,14 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
+  Switch,
+  Redirect,
   NavLink
 } from 'react-router-dom';
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
 import Blockchain from './components/Blockchain';
+import BlockDetails from './components/BlockDetails';
 import Transactions from './components/Transactions';
 import Logs from './components/Logs';
 import Configuration from './components/Configuration';
@@ -186,6 +189,13 @@ class App extends Component {
       );
     };
 
+    const BlockDetailsPage = (props) => {
+      return (
+        <BlockDetails
+        />
+      );
+    };
+
     const ConfigurationPage = (props) => {
       return (
         <Configuration
@@ -204,7 +214,6 @@ class App extends Component {
         />
       );
     };
-
 
     return (
       <Router>
@@ -252,10 +261,14 @@ class App extends Component {
             </div>
           </div>
 
-          <Route exact path="/" component={WalletPage}/>
-          <Route path="/blocks" component={BlocksPage}/>
-          <Route path="/transactions" component={Transactions}/>
-          <Route path="/configuration" component={ConfigurationPage}/>
+          <Switch>
+            <Route exact path="/blocks" component={BlocksPage}/>
+            <Route path="/blocks/:block_id" component={BlockDetailsPage}/>
+            <Route path="/transactions" component={Transactions}/>
+            <Route path="/configuration" component={ConfigurationPage}/>
+            <Route exact path="/" component={WalletPage}/>
+            <Redirect from='*' to='/' />
+          </Switch>
         </div>
       </Router>
     );

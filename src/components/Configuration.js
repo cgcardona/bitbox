@@ -71,7 +71,6 @@ class Configuration extends Component {
       <div className="Configuration">
         <div className="content">
           <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeysPage}/>
-
         </div>
       </div>
     );

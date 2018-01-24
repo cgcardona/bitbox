@@ -11,6 +11,10 @@ import {
 class Blocks extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      redirect: false,
+      blockId: 0
+    };
 
     // blockchainInstance.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
 
@@ -25,20 +29,38 @@ class Blocks extends Component {
   }
 
   createBlock() {
-    // let index = this.state.index + 1;
     let blockchain = this.props.blockchainInstance;
     blockchain.addBlock(new Block(blockchain.chain.length, Date.now(), { amount: 4 }));
     this.props.handleBlockchainUpdate(blockchain);
   }
 
+  handleBlockDetails(blockId) {
+    this.setState({
+      redirect: true,
+      blockId: blockId
+    })
+  }
+
   render() {
-        // <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeys}/>
+
+    if (this.state.redirect) {
+      return <Redirect to={`${this.props.match.url}/${this.state.blockId}`} />;
+    }
+
     let blocks = [];
     if(this.props.blockchainInstance && this.props.blockchainInstance.chain.length) {
       this.props.blockchainInstance.chain.forEach((block) => {
-        blocks.push(<Block block={block} key={block.hash} />);
+        blocks.push(
+          <Block
+            block={block}
+            key={block.hash}
+            match={this.props.match}
+            handleBlockDetails={this.handleBlockDetails.bind(this)}
+          />
+        )
       });
     }
+
     return (
       <div className="Blocks">
         <div className="pure-u-1-1">

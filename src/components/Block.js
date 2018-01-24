@@ -16,9 +16,10 @@ class Block extends Component {
   }
 
   render() {
+
     let date = new Date(this.props.block.timestamp);
     return (
-      <tr className="Block">
+      <tr className="Block" onClick={this.props.handleBlockDetails.bind(this, this.props.block.index)}>
         <td><span className='subheader'>HEIGHT</span> <br />{this.props.block.index}</td>
         <td><span className='subheader'>MINED ON</span> <br />{date.toString()}</td>
         <td><span className='subheader'>HASH</span> <br />{this.props.block.hash}</td>
