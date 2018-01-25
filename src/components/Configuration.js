@@ -13,7 +13,7 @@ class Configuration extends Component {
     };
   }
 
-  resetNibble() {
+  resetBitbox() {
     this.setState({
       redirect: true
     })
@@ -42,7 +42,7 @@ class Configuration extends Component {
   render() {
 
     if (this.state.redirect) {
-      this.props.resetNibble({});
+      this.props.resetBitbox({});
       return <Redirect to='/'/>;
     }
 
@@ -59,7 +59,7 @@ class Configuration extends Component {
           path={this.props.path}
           autogenerateMnemonic={this.props.autogenerateMnemonic}
           autogeneratePath={this.props.autogeneratePath}
-          resetNibble={this.resetNibble.bind(this)}
+          resetBitbox={this.resetBitbox.bind(this)}
         />
       );
     };

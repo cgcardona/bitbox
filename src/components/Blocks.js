@@ -87,7 +87,7 @@ class Blocks extends Component {
             <tbody>
               <tr className="Block">
                 <td>
-                  <button className='pure-button' onClick={this.createBlock.bind(this)}>Create block</button>
+                  <button className='pure-button' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
                 </td>
               </tr>
               {blocks}

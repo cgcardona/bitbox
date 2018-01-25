@@ -88,7 +88,7 @@ class AccountsAndKeys extends Component {
           <div className="l-box-lrg pure-u-1 pure-u-md-2-5">
             <form className="pure-form pure-form-stacked">
               <fieldset>
-                <button className="pure-button" onClick={this.props.resetNibble.bind(this)}><i className="fas fa-redo" /> Restart</button>
+                <button className="pure-button" onClick={this.props.resetBitbox.bind(this)}><i className="fas fa-redo" /> Restart</button>
 
 
                 <label>Total number of accounts to generate</label>

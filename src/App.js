@@ -18,6 +18,7 @@ import './App.css';
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
 import crypto from 'crypto';
+import bchaddr from 'bchaddrjs';
 
 class App extends Component {
   totalAccounts = 10;
@@ -87,7 +88,7 @@ class App extends Component {
     for (let i = 0; i < config.totalAccounts; i++) {
       addresses.push(
         {
-          public: account.derive(i).getAddress(),
+          public: bchaddr.toCashAddress(account.derive(i).getAddress()),
           private: account.derive(i).keyPair.toWIF(),
         }
       );
@@ -113,7 +114,7 @@ class App extends Component {
     this.handleUtxoUpdate(utxoSet);
   }
 
-  resetNibble(config) {
+  resetBitbox(config) {
     if(!config.totalAccounts) {
       config.totalAccounts = this.totalAccounts;
     }
@@ -222,7 +223,7 @@ class App extends Component {
       return (
         <Configuration
           match={props.match}
-          resetNibble={this.resetNibble.bind(this)}
+          resetBitbox={this.resetBitbox.bind(this)}
           totalAccounts={this.totalAccounts}
           mnemonic={this.state.mnemonic}
           path={this.state.path}
