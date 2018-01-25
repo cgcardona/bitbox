@@ -388,3 +388,7 @@ a.pure-button-primary {
 .danger {
   color: red;
 }
+
+.danger-background {
+  background-color: red;
+}
