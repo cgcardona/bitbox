@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import {
   withRouter
 } from 'react-router-dom';
@@ -22,7 +23,7 @@ class BlockDetails extends Component {
               </tr>
               <tr className="Block">
                 <td><span className='subheader'>HEIGHT</span> <br />{block.index}</td>
-                <td><span className='subheader'>MINED ON</span> <br />{date.toString()}</td>
+                <td><span className='subheader'>MINED ON</span> <br />{moment(date).format('MMMM Do YYYY, h:mm:ss a')}</td>
                 <td><span className='subheader'>HASH</span> <br />{block.hash}</td>
                 <td><span className='subheader'>TX COUNT</span> <br />1</td>
               </tr>

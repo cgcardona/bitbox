@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import Block from './Block';
 
 class Blockchain extends Component {
-  constructor(index, timestamp, data, previousHash) {
-    super(index, timestamp, data, previousHash);
-    this.chain = [this.createGenesisBlock(index, timestamp, data, previousHash)];
+  constructor(index, timestamp, transactions, previousHash) {
+    super(index, timestamp, transactions, previousHash);
+    this.chain = [this.createGenesisBlock(index, timestamp, transactions, previousHash)];
     this.difficulty = 0;
   }
 
-  createGenesisBlock(index, timestamp, data, previousHash) {
-    return new Block(index, timestamp, data, previousHash);
+  createGenesisBlock(index, timestamp, transactions, previousHash) {
+    return new Block(index, timestamp, transactions, previousHash);
   }
 
   getLatestBlock() {
@@ -17,7 +17,6 @@ class Blockchain extends Component {
   }
 
   addBlock(newBlock) {
-    newBlock.previousHash = this.getLatestBlock().hash;
     newBlock.mineBlock(this.difficulty);
     this.chain.push(newBlock);
   }
@@ -46,4 +45,5 @@ class Blockchain extends Component {
     );
   }
 }
+
 export default Blockchain;

@@ -25,9 +25,16 @@ class Blocks extends Component {
   }
 
   createBlock() {
-    let blockchain = this.props.blockchainInstance;
-    blockchain.addBlock(new Block(blockchain.chain.length, Date.now(), { amount: 4 }));
-    this.props.handleBlockchainUpdate(blockchain);
+    let blockchainInstance = this.props.blockchainInstance;
+    let coinbaseTx = [{
+      sender: 'coinbase',
+      receiver: this.props.addresses[0],
+      amount: 12.5,
+      hash: blockchainInstance.getLatestBlock().hash
+    }];
+
+    blockchainInstance.addBlock(new Block(blockchainInstance.chain.length, Date.now(), coinbaseTx));
+    this.props.handleBlockchainUpdate(blockchainInstance);
   }
 
   handleBlockDetails(blockId) {

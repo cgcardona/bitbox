@@ -14,9 +14,9 @@ import BlockDetails from './components/BlockDetails';
 import Transactions from './components/Transactions';
 import Configuration from './components/Configuration';
 import './App.css';
-const Bitcoin = require('bitcoinjs-lib');
-const BIP39 = require('bip39');
-const crypto = require('crypto');
+import Bitcoin from 'bitcoinjs-lib';
+import BIP39 from 'bip39';
+import crypto from 'crypto';
 
 class App extends Component {
   totalAccounts = 10;
@@ -54,10 +54,6 @@ class App extends Component {
         configuration: config
       });
     }
-    let BlockchainInstance= new Blockchain(0, Date.now(), {amount: "Chancellor on the brink of bailouts"}, "0");
-    this.setState({
-      blockchainInstance: BlockchainInstance
-    });
   }
 
   createHDWallet(config) {
@@ -98,6 +94,21 @@ class App extends Component {
       mnemonic: config.mnemonic,
       path: config.path,
       addresses: addresses,
+    });
+    this.createBlockchain();
+  }
+
+  createBlockchain() {
+    let genesisTx = [{
+      sender: 'coinbase',
+      receiver: this.state.addresses[0],
+      amount: 12.5
+    }];
+    let BlockchainInstance= new Blockchain(0, Date.now(), genesisTx, "0");
+    let accounts = this.state.accounts;
+    // let account = accounts[]
+    this.setState({
+      blockchainInstance: BlockchainInstance
     });
   }
 
@@ -184,6 +195,7 @@ class App extends Component {
           match={props.match}
           blockchainInstance={this.state.blockchainInstance}
           handleBlockchainUpdate={this.handleBlockchainUpdate.bind(this)}
+          addresses={this.state.addresses}
         />
       );
     };

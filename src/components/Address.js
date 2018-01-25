@@ -6,7 +6,8 @@ class Address extends Component {
 
     this.state = {
       address: this.props.address.public,
-      showPrivKey: false
+      showPrivKey: false,
+      balance: 0
     }
   }
 
@@ -38,7 +39,7 @@ class Address extends Component {
     return (
       <tr className="Address">
         <td><span className='subheader'>ADDRESS</span> <br />{address}</td>
-        <td><span className='subheader'>BALANCE</span> <br />50 BCH</td>
+        <td><span className='subheader'>BALANCE</span> <br />{this.state.balance} BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />0</td>
         <td><span className='subheader'>INDEX</span> <br />{this.props.index}</td>
         {btn}

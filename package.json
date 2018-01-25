@@ -7,6 +7,7 @@
     "bitcoinjs-lib": "^3.3.2",
     "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
+    "moment": "^2.20.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
