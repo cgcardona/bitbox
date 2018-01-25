@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
 
 class Utxo extends Component {
-  constructor(props) {
-    super(props);
+  constructor(receiver, amount) {
+    super(receiver, amount);
 
     this.state = {
-      outputs: []
-    }
+      outputs: [{
+        receiver: receiver,
+        amount: amount
+      }]
+    };
+  }
+
+  addUtxo(receiver, amount) {
+    let outputs = this.state.outputs;
+    outputs.push({
+      receiver: receiver,
+      amount: amount
+    })
+
+    this.setState({
+      outputs: outputs
+    })
   }
 
   render() {

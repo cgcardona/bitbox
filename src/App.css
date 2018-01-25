@@ -337,20 +337,21 @@ a.pure-button-primary {
   padding-right: 1em;
 }
 
-.Wallet ul.header li, .Wallet ul.subheader li {
+.Wallet ul.subheader li {
   display: inline;
 }
 
-.Wallet ul.subhead {
-  font-size: 1.1em;
-}
-
-.Wallet ul.header {
-  font-size: 1.1em;
+.Wallet ul.subheader {
+  font-size: 0.8em;
+  margin: 0;
 }
 
 .Wallet.content {
   padding: 1em 0;
+}
+
+.Wallet td {
+  padding: 1.2em;
 }
 
 .pure-table {

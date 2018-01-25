@@ -24,17 +24,25 @@ class Blocks extends Component {
     // console.log("Blockchain valid? " + blockchainInstance.isChainValid());
   }
 
+
   createBlock() {
     let blockchainInstance = this.props.blockchainInstance;
     let coinbaseTx = [{
       sender: 'coinbase',
-      receiver: this.props.addresses[0],
+      receiver: this.props.addresses[0].public,
       amount: 12.5,
-      hash: blockchainInstance.getLatestBlock().hash
     }];
 
-    blockchainInstance.addBlock(new Block(blockchainInstance.chain.length, Date.now(), coinbaseTx));
+
+    blockchainInstance.addBlock(new Block(blockchainInstance.chain.length, Date.now(), coinbaseTx, blockchainInstance.getLatestBlock().hash));
     this.props.handleBlockchainUpdate(blockchainInstance);
+    this.updateUtxo(coinbaseTx[0].receiver, coinbaseTx[0].amount);
+  }
+
+  updateUtxo(receiver, amount) {
+    let utxoSet = this.props.utxoSet;
+    utxoSet.addUtxo(receiver, amount);
+    this.props.handleUtxoUpdate(utxoSet);
   }
 
   handleBlockDetails(blockId) {

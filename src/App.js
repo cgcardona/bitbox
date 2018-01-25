@@ -12,6 +12,7 @@ import Blocks from './components/Blocks';
 import Blockchain from './components/Blockchain';
 import BlockDetails from './components/BlockDetails';
 import Transactions from './components/Transactions';
+import Utxo from './components/Utxo';
 import Configuration from './components/Configuration';
 import './App.css';
 import Bitcoin from 'bitcoinjs-lib';
@@ -31,6 +32,7 @@ class App extends Component {
       mnemonic: '',
       addresses: [],
       blockchainInstance: '',
+      utxoSet: '',
       configuration: {
         wallet: {
           createNewWallet: true,
@@ -90,26 +92,25 @@ class App extends Component {
         }
       );
     }
+
     this.setState({
       mnemonic: config.mnemonic,
       path: config.path,
       addresses: addresses,
     });
-    this.createBlockchain();
+    this.createBlockchain(addresses[0].public);
   }
 
-  createBlockchain() {
+  createBlockchain(coinbaseAddress) {
     let genesisTx = [{
       sender: 'coinbase',
-      receiver: this.state.addresses[0],
+      receiver: coinbaseAddress,
       amount: 12.5
     }];
-    let BlockchainInstance= new Blockchain(0, Date.now(), genesisTx, "0");
-    let accounts = this.state.accounts;
-    // let account = accounts[]
-    this.setState({
-      blockchainInstance: BlockchainInstance
-    });
+    let blockchainInstance= new Blockchain(0, Date.now(), genesisTx, "0");
+    let utxoSet = new Utxo(genesisTx[0].receiver, genesisTx[0].amount);
+    this.handleBlockchainUpdate(blockchainInstance);
+    this.handleUtxoUpdate(utxoSet);
   }
 
   resetNibble(config) {
@@ -158,9 +159,15 @@ class App extends Component {
     }
   }
 
-  handleBlockchainUpdate(blockchain) {
+  handleBlockchainUpdate(blockchainInstance) {
     this.setState({
-      blockchainInstance: blockchain
+      blockchainInstance: blockchainInstance
+    })
+  }
+
+  handleUtxoUpdate(utxoSet) {
+    this.setState({
+      utxoSet: utxoSet
     })
   }
 
@@ -184,7 +191,9 @@ class App extends Component {
         <Wallet
           mnemonic={this.state.mnemonic}
           path={this.state.path}
+          blockchainInstance={this.state.blockchainInstance}
           addresses={this.state.addresses}
+          utxoSet={this.state.utxoSet}
         />
       );
     };
@@ -195,7 +204,9 @@ class App extends Component {
           match={props.match}
           blockchainInstance={this.state.blockchainInstance}
           handleBlockchainUpdate={this.handleBlockchainUpdate.bind(this)}
+          handleUtxoUpdate={this.handleUtxoUpdate.bind(this)}
           addresses={this.state.addresses}
+          utxoSet={this.state.utxoSet}
         />
       );
     };
@@ -239,7 +250,8 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/">Wallet
+                    to="/">
+                    <i className="fas fa-user"></i> Wallet
                   </NavLink>
                 </li>
                 <li className="pure-menu-item">
@@ -247,7 +259,8 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/blocks">Blocks
+                    to="/blocks">
+                    <i className="fas fa-cubes"></i> Blocks
                   </NavLink>
                 </li>
                 <li className="pure-menu-item">
@@ -255,7 +268,8 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/transactions">Transactions
+                    to="/transactions">
+                    <i className="fas fa-exchange-alt"></i> Transactions
                   </NavLink>
                 </li>
               </ul>
@@ -265,7 +279,8 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/configuration/accounts-and-keys">Configuration
+                    to="/configuration/accounts-and-keys">
+                    <i className="fas fa-cog"></i>
                   </NavLink>
                 </li>
               </ul>

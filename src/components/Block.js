@@ -32,7 +32,7 @@ class Block extends Component {
         <td><span className='subheader'>HEIGHT</span> <br />{this.props.block.index}</td>
         <td><span className='subheader'>MINED ON</span> <br />{moment(date).format('MMMM Do YYYY, h:mm:ss a')}</td>
         <td><span className='subheader'>HASH</span> <br />{this.props.block.hash}</td>
-        <td><span className='subheader'>TX COUNT</span> <br />1</td>
+        <td><span className='subheader'>TX COUNT</span> <br />{this.props.block.transactions.length}</td>
       </tr>
     );
   }
