@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import Block from './Block';
-import Blockchain from './Blockchain';
-import AccountsAndKeys from './AccountsAndKeys';
 import {
-  Route,
-  Link,
   Redirect
 } from 'react-router-dom';
 
@@ -44,7 +40,15 @@ class Blocks extends Component {
   render() {
 
     if (this.state.redirect) {
-      return <Redirect to={`${this.props.match.url}/${this.state.blockId}`} />;
+      return <Redirect
+        push
+        to={{
+          pathname: `${this.props.match.url}/${this.state.blockId}`,
+          state: {
+            block: this.props.blockchainInstance.chain[this.state.blockId]
+          }
+        }}
+      />
     }
 
     let blocks = [];

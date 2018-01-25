@@ -71,13 +71,13 @@ class AccountsAndKeys extends Component {
     let customMnemonic;
     if(!this.state.autogenerateMnemonic) {
       customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
-      customMnemonic = <input type='text' placeholder="Enter mnemonic to use" value={this.state.mnemonic} onChange={this.handleMnemonicChange.bind(this)} />;
+      customMnemonic = <input type='text' placeholder={this.state.mnemonic} onChange={this.handleMnemonicChange.bind(this)} />;
     }
     //
     let customPathLabel;
     let customPath;
     if(!this.state.autogeneratePath) {
-      customPathLabel = <input type='text' placeholder="Enter HD path to use" value={this.state.path} onChange={this.handlePathChange.bind(this)} />;
+      customPathLabel = <input type='text' placeholder={this.state.path} onChange={this.handlePathChange.bind(this)} />;
       customPath = <label>Enter the HD path you wish to use</label>;
     }
 

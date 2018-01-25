@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import AccountsAndKeys from './AccountsAndKeys';
 import {
   Route,
-  Link,
   Redirect
 } from 'react-router-dom';
 

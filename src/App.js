@@ -12,7 +12,6 @@ import Blocks from './components/Blocks';
 import Blockchain from './components/Blockchain';
 import BlockDetails from './components/BlockDetails';
 import Transactions from './components/Transactions';
-import Logs from './components/Logs';
 import Configuration from './components/Configuration';
 import './App.css';
 const Bitcoin = require('bitcoinjs-lib');
