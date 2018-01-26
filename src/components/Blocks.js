@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Block from './Block';
+import Block from '../models/Block';
+import BlockDetails from './BlockDetails';
 import {
   Redirect
 } from 'react-router-dom';
@@ -27,16 +28,23 @@ class Blocks extends Component {
 
   createBlock() {
     let blockchainInstance = this.props.blockchainInstance;
-    let coinbaseTx = [{
+
+    let tx = [{
       sender: 'coinbase',
       receiver: this.props.addresses[0].public,
-      amount: 12.5,
+      amount: 12.5
     }];
 
+    let block = {
+      index: blockchainInstance.chain.length,
+      timestamp: Date.now(),
+      transactions: tx,
+      previousHash: blockchainInstance.getLatestBlock().hash
+    };
 
-    blockchainInstance.addBlock(new Block(blockchainInstance.chain.length, Date.now(), coinbaseTx, blockchainInstance.getLatestBlock().hash));
+    blockchainInstance.addBlock(new Block(block));
     this.props.handleBlockchainUpdate(blockchainInstance);
-    this.updateUtxo(coinbaseTx[0].receiver, coinbaseTx[0].amount);
+    this.updateUtxo(tx[0].receiver, tx[0].amount);
   }
 
   updateUtxo(receiver, amount) {
@@ -70,7 +78,7 @@ class Blocks extends Component {
     if(this.props.blockchainInstance && this.props.blockchainInstance.chain.length) {
       this.props.blockchainInstance.chain.forEach((block) => {
         blocks.push(
-          <Block
+          <BlockDetails
             block={block}
             key={block.hash}
             match={this.props.match}

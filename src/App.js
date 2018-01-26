@@ -9,8 +9,8 @@ import {
 } from 'react-router-dom';
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
-import Blockchain from './components/Blockchain';
-import BlockDetails from './components/BlockDetails';
+import Blockchain from './models/Blockchain';
+import BlockchainDetails from './components/BlockchainDetails';
 import Transactions from './components/Transactions';
 import Utxo from './components/Utxo';
 import Configuration from './components/Configuration';
@@ -108,7 +108,13 @@ class App extends Component {
       receiver: coinbaseAddress,
       amount: 12.5
     }];
-    let blockchainInstance= new Blockchain(0, Date.now(), genesisTx, "0");
+    let genesisBlock = {
+      index: 0,
+      timestamp: Date.now(),
+      transactions: genesisTx,
+      previousHash: '0'
+    };
+    let blockchainInstance = new Blockchain(genesisBlock);
     let utxoSet = new Utxo(genesisTx[0].receiver, genesisTx[0].amount);
     this.handleBlockchainUpdate(blockchainInstance);
     this.handleUtxoUpdate(utxoSet);
@@ -212,9 +218,19 @@ class App extends Component {
       );
     };
 
-    const BlockDetailsPage = (props) => {
+    const BlockchainDetailsPage = (props) => {
       return (
-        <BlockDetails
+        <BlockchainDetails
+          blockchainInstance={this.state.blockchainInstance}
+          match={props.match}
+        />
+      );
+    };
+
+    const TransactionsPage = (props) => {
+      return (
+        <Transactions
+          addresses={this.state.addresses}
         />
       );
     };
@@ -237,6 +253,10 @@ class App extends Component {
         />
       );
     };
+    let chainlength = 0;
+    if(this.state.blockchainInstance.chain) {
+      chainlength = this.state.blockchainInstance.chain.length - 1;
+    }
 
     return (
       <Router>
@@ -286,12 +306,27 @@ class App extends Component {
                 </li>
               </ul>
             </div>
+            <div className="pure-menu pure-menu-horizontal networkInfo">
+              <ul className="pure-menu-list">
+
+                <li className="pure-menu-item">
+                  CURRENT BLOCK <br />
+                  {chainlength}
+                </li>
+                <li className="pure-menu-item">
+                  RPC SERVER <br /> http://127.0.0.1:8332
+                </li>
+                <li className="pure-menu-item">
+                  MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+                </li>
+              </ul>
+            </div>
           </div>
 
           <Switch>
             <Route exact path="/blocks" component={BlocksPage}/>
-            <Route path="/blocks/:block_id" component={BlockDetailsPage}/>
-            <Route path="/transactions" component={Transactions}/>
+            <Route path="/blocks/:block_id" component={BlockchainDetailsPage}/>
+            <Route path="/transactions" component={TransactionsPage}/>
             <Route path="/configuration" component={ConfigurationPage}/>
             <Route exact path="/" component={WalletPage}/>
             <Redirect from='*' to='/' />

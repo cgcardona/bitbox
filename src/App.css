@@ -330,6 +330,14 @@ a.pure-button-primary {
   color: #fff;
 }
 
+.main-header .networkInfo {
+  background: #6FBEF3;
+}
+
+.main-header .networkInfo a {
+  color: #2d3e50;
+}
+
 .Wallet ul {
   list-style-type: none;
   color: #34495e;
@@ -386,10 +394,46 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.danger {
-  color: red;
+.Address td {
+  padding: 1.25em 1em;
 }
 
-.danger-background {
-  background-color: red;
+.Address td.important .subheader {
+  font-size: 0.6em;
+}
+
+.Address td.important {
+  font-size: 1.3em;
+}
+
+.pure-button {
+  background-color: #6FBEF3;
+}
+
+.main-header .pure-menu-horizontal {
+  padding: 1em 0;
+}
+
+.main-header .pure-menu-horizontal svg {
+  font-size: 1.25em;
+}
+
+.main-header .pure-menu-horizontal.networkInfo {
+  padding: 1em 0;
+  color: #fff;
+  font-size: 0.75em;
+  line-height: 1.25em;
+}
+
+.main-header .pure-menu-horizontal.networkInfo li {
+  padding-left: 1em;
+  padding-right: 10px;
+}
+
+.Address .danger {
+  color: #f39d6f;
+}
+
+.Address .danger-background {
+  background-color: #f39d6f;
 }
