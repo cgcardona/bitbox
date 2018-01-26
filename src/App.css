@@ -394,15 +394,15 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.Address td {
+.AddressDetails td {
   padding: 1.25em 1em;
 }
 
-.Address td.important .subheader {
+.AddressDetails td.important .subheader {
   font-size: 0.6em;
 }
 
-.Address td.important {
+.AddressDetails td.important {
   font-size: 1.3em;
 }
 
@@ -430,10 +430,10 @@ a.pure-button-primary {
   padding-right: 10px;
 }
 
-.Address .danger {
+.AddressDetails .danger {
   color: #f39d6f;
 }
 
-.Address .danger-background {
+.AddressDetails .danger-background {
   background-color: #f39d6f;
 }

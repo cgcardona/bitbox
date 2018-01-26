@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Address from './Address';
+import AddressDetails from './AddressDetails';
 import _ from 'underscore';
 
 class Wallet extends Component {
@@ -8,7 +8,7 @@ class Wallet extends Component {
     if (this.props.addresses.length) {
       this.props.addresses.forEach((address, index) => {
         // get balances
-        let outputs = _.where(this.props.utxoSet.state.outputs, {receiver: address.public});
+        let outputs = _.where(this.props.utxoSet.outputs, {receiver: address.publicKey});
         let balance = 0;
          _.each(outputs, (output, index) => {
            balance += output.amount;
@@ -17,8 +17,8 @@ class Wallet extends Component {
         // get transactions
         let transactions = [];
         _.each(this.props.blockchainInstance.chain, (block, index) => {
-          transactions.push(_.where(block.transactions, {sender: address.public}));
-          transactions.push(_.where(block.transactions, {receiver: address.public}));
+          transactions.push(_.where(block.transactions, {sender: address.publicKey}));
+          transactions.push(_.where(block.transactions, {receiver: address.publicKey}));
         });
 
         let transactionsCount = 0;
@@ -27,7 +27,7 @@ class Wallet extends Component {
         });
 
         list.push(
-          <Address
+          <AddressDetails
             address={address}
             index={index}
             key={index}

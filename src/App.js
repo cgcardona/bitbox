@@ -1,3 +1,4 @@
+// react imports
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
@@ -7,18 +8,27 @@ import {
   Redirect,
   NavLink
 } from 'react-router-dom';
+
+// custom models
+import Blockchain from './models/Blockchain';
+import Address from './models/Address';
+
+// custom components
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
-import Blockchain from './models/Blockchain';
 import BlockchainDetails from './components/BlockchainDetails';
 import Transactions from './components/Transactions';
-import Utxo from './components/Utxo';
+import Utxo from './models/Utxo';
 import Configuration from './components/Configuration';
-import './App.css';
+
+// npm libs
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
 import crypto from 'crypto';
 import bchaddr from 'bchaddrjs';
+
+// css
+import './App.css';
 
 class App extends Component {
   totalAccounts = 10;
@@ -86,20 +96,15 @@ class App extends Component {
 
     const addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
-      addresses.push(
-        {
-          public: bchaddr.toCashAddress(account.derive(i).getAddress()),
-          private: account.derive(i).keyPair.toWIF(),
-        }
-      );
-    }
+      addresses.push(new Address(bchaddr.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
+    };
 
     this.setState({
       mnemonic: config.mnemonic,
       path: config.path,
       addresses: addresses,
     });
-    this.createBlockchain(addresses[0].public);
+    this.createBlockchain(addresses[0].publicKey);
   }
 
   createBlockchain(coinbaseAddress) {

@@ -25,13 +25,12 @@ class Blocks extends Component {
     // console.log("Blockchain valid? " + blockchainInstance.isChainValid());
   }
 
-
   createBlock() {
     let blockchainInstance = this.props.blockchainInstance;
 
     let tx = [{
       sender: 'coinbase',
-      receiver: this.props.addresses[0].public,
+      receiver: this.props.addresses[0].publicKey,
       amount: 12.5
     }];
 

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-class Address extends Component {
+class AddressDetails extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      address: this.props.address.public,
+      address: this.props.address.publicKey,
       showPrivKey: false
     }
   }
@@ -29,10 +29,10 @@ class Address extends Component {
     let address;
     if(this.state.showPrivKey) {
 
-      btn = <td><button className="pure-button danger-background" onClick={this.hideKey.bind(this, this.props.address.public)}><i className="fas fa-key" /></button></td>;
+      btn = <td><button className="pure-button danger-background" onClick={this.hideKey.bind(this, this.props.address.publicKey)}><i className="fas fa-key" /></button></td>;
       address = <span className='danger'>{this.state.address}</span>;
     } else {
-      btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.props.address.private)}><i className="fas fa-key" /></button></td>;
+      btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.props.address.privateKey)}><i className="fas fa-key" /></button></td>;
       address = <span className='success'>{this.state.address}</span>;
     }
 
@@ -42,7 +42,7 @@ class Address extends Component {
     }
 
     return (
-      <tr className="Address">
+      <tr className="AddressDetails">
         <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address}</td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />{this.props.balance} BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />{this.props.transactionsCount}</td>
@@ -53,4 +53,4 @@ class Address extends Component {
   }
 }
 
-export default Address;
+export default AddressDetails;
