@@ -12,6 +12,7 @@ import {
 // custom models
 import Blockchain from './models/Blockchain';
 import Address from './models/Address';
+import Block from './models/Block';
 
 // custom components
 import Wallet from './components/Wallet';
@@ -50,7 +51,8 @@ class App extends Component {
           network: 'bitcoin'
         },
         createNewBlockchain: true
-      }
+      },
+      showCreateBtn: false
     };
   }
 
@@ -111,7 +113,8 @@ class App extends Component {
     let genesisTx = [{
       sender: 'coinbase',
       receiver: coinbaseAddress,
-      amount: 12.5
+      amount: 12.5,
+      timestamp: Date.now()
     }];
     let genesisBlock = {
       index: 0,
@@ -183,14 +186,43 @@ class App extends Component {
     })
   }
 
+  createBlock() {
+    let blockchainInstance = this.state.blockchainInstance;
+
+    let tx = [{
+      sender: 'coinbase',
+      receiver: this.state.addresses[0].publicKey,
+      amount: 12.5,
+      timestamp: Date.now()
+    }];
+
+    let block = {
+      index: blockchainInstance.chain.length,
+      timestamp: Date.now(),
+      transactions: tx,
+      previousHash: blockchainInstance.getLatestBlock().hash
+    };
+
+    blockchainInstance.addBlock(new Block(block));
+    this.handleBlockchainUpdate(blockchainInstance);
+    this.updateUtxo(tx[0].receiver, tx[0].amount);
+  }
+
+  updateUtxo(receiver, amount) {
+    let utxoSet = this.state.utxoSet;
+    utxoSet.addUtxo(receiver, amount);
+    this.handleUtxoUpdate(utxoSet);
+  }
+
   render() {
 
-  const pathMatch = (match, location) => {
-    if (!match) {
-      return false
+    const pathMatch = (match, location) => {
+      if (!match) {
+        return false
+      }
+      return this.handlePathMatch(match.path);
     }
-    return this.handlePathMatch(match.path);
-  }
+
     let list = []
     if (this.state.addresses.length) {
       this.state.addresses.forEach(address => {
@@ -323,6 +355,9 @@ class App extends Component {
                 </li>
                 <li className="pure-menu-item">
                   MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+                </li>
+                <li className="pure-menu-item">
+                  <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
                 </li>
               </ul>
             </div>

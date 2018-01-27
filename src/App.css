@@ -326,8 +326,9 @@ a.pure-button-primary {
   color: #6FBEF3;
 }
 
-.main-header a.pure-menu-link.pure-menu-selected {
+.main-header a.pure-menu-link.pure-menu-selected, .main-header a.pure-menu-link:hover {
   color: #fff;
+  background: none;
 }
 
 .main-header .networkInfo {
@@ -394,15 +395,15 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.AddressDetails td {
+.AddressDetails td, .Blocks td {
   padding: 1.25em 1em;
 }
 
-.AddressDetails td.important .subheader {
+.AddressDetails td.important .subheader, .Blocks td.important .subheader {
   font-size: 0.6em;
 }
 
-.AddressDetails td.important {
+.AddressDetails td.important, .Blocks td.important {
   font-size: 1.3em;
 }
 
@@ -434,6 +435,22 @@ a.pure-button-primary {
   color: #f39d6f;
 }
 
-.AddressDetails .danger-background {
+.danger-background {
   background-color: #f39d6f;
+}
+
+.Blocks td:first-of-type {
+  background-color: #6FBEF3;
+  color: white;
+  text-align: center;
+  padding: 0.75em;
+  width: 5%;
+}
+
+.Blocks td {
+  cursor: pointer;
+}
+
+.Blocks tr:hover {
+  background: #eee;
 }

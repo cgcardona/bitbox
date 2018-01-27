@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Block from '../models/Block';
 import BlockDetails from './BlockDetails';
+import _ from 'underscore';
 import {
   Redirect
 } from 'react-router-dom';
@@ -23,33 +24,6 @@ class Blocks extends Component {
 
     // Check our chain again (will now return false)
     // console.log("Blockchain valid? " + blockchainInstance.isChainValid());
-  }
-
-  createBlock() {
-    let blockchainInstance = this.props.blockchainInstance;
-
-    let tx = [{
-      sender: 'coinbase',
-      receiver: this.props.addresses[0].publicKey,
-      amount: 12.5
-    }];
-
-    let block = {
-      index: blockchainInstance.chain.length,
-      timestamp: Date.now(),
-      transactions: tx,
-      previousHash: blockchainInstance.getLatestBlock().hash
-    };
-
-    blockchainInstance.addBlock(new Block(block));
-    this.props.handleBlockchainUpdate(blockchainInstance);
-    this.updateUtxo(tx[0].receiver, tx[0].amount);
-  }
-
-  updateUtxo(receiver, amount) {
-    let utxoSet = this.props.utxoSet;
-    utxoSet.addUtxo(receiver, amount);
-    this.props.handleUtxoUpdate(utxoSet);
   }
 
   handleBlockDetails(blockId) {
@@ -75,11 +49,13 @@ class Blocks extends Component {
 
     let blocks = [];
     if(this.props.blockchainInstance && this.props.blockchainInstance.chain.length) {
-      this.props.blockchainInstance.chain.forEach((block) => {
+      let chain = _.sortBy(this.props.blockchainInstance.chain, 'index');
+
+      chain.reverse().forEach((block, index) => {
         blocks.push(
           <BlockDetails
             block={block}
-            key={block.hash}
+            key={index}
             match={this.props.match}
             handleBlockDetails={this.handleBlockDetails.bind(this)}
           />
@@ -92,11 +68,6 @@ class Blocks extends Component {
         <div className="pure-u-1-1">
           <table className="pure-table">
             <tbody>
-              <tr className="Block">
-                <td>
-                  <button className='pure-button' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
-                </td>
-              </tr>
               {blocks}
             </tbody>
           </table>
