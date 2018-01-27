@@ -42,9 +42,10 @@
  * Most of these are inherited from Base, but I want to change a few.
  */
 body {
-    line-height: 1.7em;
-    color: #7f8c8d;
-    font-size: 13px;
+  line-height: 1.7em;
+  color: #7f8c8d;
+  font-size: 13px;
+  min-width: 1250px;
 }
 
 h1,
@@ -439,7 +440,7 @@ a.pure-button-primary {
   background-color: #f39d6f;
 }
 
-.Blocks td:first-of-type, .HeaderBlockchainDetails td:first-of-type {
+.Blocks td:first-of-type, .HeaderBlockDetails td:first-of-type {
   background-color: #6FBEF3;
   color: white;
   text-align: center;
@@ -448,7 +449,7 @@ a.pure-button-primary {
   cursor: pointer;
 }
 
-.HeaderBlockchainDetails.pure-table td:first-of-type .subheader {
+.HeaderBlockDetails.pure-table td:first-of-type .subheader {
   color: white;
 }
 
@@ -464,32 +465,32 @@ a.pure-button-primary {
   background: #f39d6f;
 }
 
-.HeaderBlockchainDetails.pure-table tr:first-of-type td {
+.HeaderBlockDetails.pure-table tr:first-of-type td {
   font-size: 1.5em;
 }
 
-.HeaderBlockchainDetails.pure-table tr:first-of-type td:first-of-type {
+.HeaderBlockDetails.pure-table tr:first-of-type td:first-of-type {
   font-size: 1em;
 }
 
-.HeaderBlockchainDetails.pure-table tr:first-of-type td:first-of-type:hover {
+.HeaderBlockDetails.pure-table tr:first-of-type td:first-of-type:hover {
   background-color: #f39d6f;
 }
 
-.BodyBlockchainDetails.pure-table {
+.BodyBlockDetails.pure-table {
   font-size: 1em;
 }
 
-.BodyBlockchainDetails.pure-table tr {
+.BodyBlockDetails.pure-table tr {
   border: none;
 }
 
-.BodyBlockchainDetails.pure-table tr:not(:first-of-type) td {
+.BodyBlockDetails.pure-table tr:not(:first-of-type) td {
   font-weight: normal;
   font-size: 0.75em;
   width: 20%;
 }
 
-.BodyBlockchainDetails.pure-table tbody:last-of-type {
+.BodyBlockDetails.pure-table tbody:last-of-type {
   border: none;
 }

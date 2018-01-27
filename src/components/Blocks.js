@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BlockDetails from './BlockDetails';
+import BlocksDetails from './BlocksDetails';
 import _ from 'underscore';
 import {
   Redirect
@@ -52,7 +52,7 @@ class Blocks extends Component {
 
       chain.reverse().forEach((block, index) => {
         blocks.push(
-          <BlockDetails
+          <BlocksDetails
             block={block}
             key={index}
             match={this.props.match}

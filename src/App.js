@@ -17,7 +17,7 @@ import Block from './models/Block';
 // custom components
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
-import BlockchainDetails from './components/BlockchainDetails';
+import BlockDetails from './components/BlockDetails';
 import Transactions from './components/Transactions';
 import Utxo from './models/Utxo';
 import Configuration from './components/Configuration';
@@ -255,9 +255,9 @@ class App extends Component {
       );
     };
 
-    const BlockchainDetailsPage = (props) => {
+    const BlockPage = (props) => {
       return (
-        <BlockchainDetails
+        <BlockDetails
           blockchainInstance={this.state.blockchainInstance}
           match={props.match}
         />
@@ -365,7 +365,7 @@ class App extends Component {
 
           <Switch>
             <Route exact path="/blocks" component={BlocksPage}/>
-            <Route path="/blocks/:block_id" component={BlockchainDetailsPage}/>
+            <Route path="/blocks/:block_id" component={BlockPage}/>
             <Route path="/transactions" component={TransactionsPage}/>
             <Route path="/configuration" component={ConfigurationPage}/>
             <Route exact path="/" component={WalletPage}/>
