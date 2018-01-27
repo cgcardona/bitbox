@@ -200,7 +200,7 @@ class App extends Component {
       index: blockchainInstance.chain.length,
       timestamp: Date.now(),
       transactions: tx,
-      previousHash: blockchainInstance.getLatestBlock().hash
+      previousHash: blockchainInstance.getLatestBlock().blockheader.hashMerkleRoot
     };
 
     blockchainInstance.addBlock(new Block(block));

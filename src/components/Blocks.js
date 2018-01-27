@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Block from '../models/Block';
 import BlockDetails from './BlockDetails';
 import _ from 'underscore';
 import {
