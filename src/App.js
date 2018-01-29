@@ -21,6 +21,7 @@ import Output from './models/Output';
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
+import AddressDetails from './components/AddressDetails';
 import Transactions from './components/Transactions';
 import Utxo from './models/Utxo';
 import Configuration from './components/Configuration';
@@ -46,12 +47,12 @@ class App extends Component {
       addresses: [],
       blockchainInstance: '',
       utxoSet: '',
+      displayCashaddr: true,
       configuration: {
         wallet: {
           createNewWallet: true,
           network: 'bitcoin'
-        },
-        createNewBlockchain: true
+        }
       },
       showCreateBtn: false
     };
@@ -59,54 +60,20 @@ class App extends Component {
 
   componentDidMount() {
     if(this.state.configuration.wallet.createNewWallet) {
-      this.createHDWallet({
+      let [mnemonic, path, addresses] = BitcoinCash.createHDWallet({
         totalAccounts: this.totalAccounts,
         autogenerateMnemonic: this.autogenerateMnemonic,
         autogeneratePath: this.autogeneratePath
       });
       let config = this.state.configuration;
-      config.createNewBlockchain = false;
       this.setState({
+        mnemonic: mnemonic,
+        path: path,
+        addresses: addresses,
         configuration: config
       });
+      this.createBlockchain(addresses);
     }
-  }
-
-  createHDWallet(config) {
-    if(!config.mnemonic && config.autogenerateMnemonic) {
-      config.mnemonic = BitcoinCash.entropyToMnemonic();
-    }
-
-    if((!config.path && config.autogeneratePath) || !this.path) {
-      let depth = Math.floor(Math.random() * 11);
-
-      let path = "m/44'/0'";
-      for(let i = 0; i <= depth; i++) {
-        let child = Math.floor(Math.random() * 100);
-        path = `${path}/${child}'`;
-      }
-      config.path = path;
-    } else {
-      config.path = this.path;
-    }
-
-    const seed = BitcoinCash.mnemonicToSeed(config.mnemonic);
-    const masterkey = BitcoinCash.fromSeedBuffer(seed);
-
-    const account = masterkey.derivePath(config.path);
-
-    const addresses = [];
-    for (let i = 0; i < config.totalAccounts; i++) {
-      addresses.push(new Address(account.derive(i).getAddress(), account.derive(i).keyPair.toWIF()));
-      // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
-    };
-
-    this.setState({
-      mnemonic: config.mnemonic,
-      path: config.path,
-      addresses: addresses,
-    });
-    this.createBlockchain(addresses);
   }
 
   rng() {
@@ -195,9 +162,7 @@ class App extends Component {
   }
 
   resetBitbox(config) {
-    if(!config.totalAccounts) {
-      config.totalAccounts = this.totalAccounts;
-    }
+    config.totalAccounts = this.totalAccounts;
 
     if(!config.mnemonic && this.mnemonic !== '') {
       config.mnemonic = this.mnemonic;
@@ -206,10 +171,18 @@ class App extends Component {
     if(!config.autogenerateMnemonic && this.autogenerateMnemonic !== false) {
       config.autogenerateMnemonic = this.autogenerateMnemonic;
     }
+
     if(!config.autogeneratePath && this.autogeneratePath === false) {
       config.autogeneratePath = this.autogeneratePath;
+      config.path = this.path;
     }
-    this.createHDWallet(config);
+    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(config);
+    this.setState({
+      mnemonic: mnemonic,
+      path: path,
+      addresses: addresses
+    });
+    this.createBlockchain(addresses);
   }
 
   handleMnemonicChange(mnemonic) {
@@ -221,7 +194,7 @@ class App extends Component {
   }
 
   handleTotalAccountsChange(totalAccounts) {
-    this.totalAccounts = totalAccounts;
+    this.totalAccounts = +totalAccounts;
   }
 
   handleAutoGenerateMnemonicChange(autogenerateMnemonic) {
@@ -230,6 +203,12 @@ class App extends Component {
 
   handleAutoGeneratePathChange(autogeneratePath) {
     this.autogeneratePath = autogeneratePath;
+  }
+
+  handleDisplayCashaddrChange(displayCashaddr) {
+    this.setState({
+      displayCashaddr: displayCashaddr
+    });
   }
 
   handlePathMatch(path) {
@@ -306,6 +285,7 @@ class App extends Component {
           blockchainInstance={this.state.blockchainInstance}
           addresses={this.state.addresses}
           utxoSet={this.state.utxoSet}
+          displayCashaddr={this.state.displayCashaddr}
         />
       );
     };
@@ -332,6 +312,15 @@ class App extends Component {
       );
     };
 
+    const AddressPage = (props) => {
+      return (
+        <AddressDetails
+          blockchainInstance={this.state.blockchainInstance}
+          match={props.match}
+        />
+      );
+    };
+
     const TransactionsPage = (props) => {
       return (
         <Transactions
@@ -348,6 +337,7 @@ class App extends Component {
           totalAccounts={this.totalAccounts}
           mnemonic={this.state.mnemonic}
           path={this.state.path}
+          displayCashaddr={this.state.displayCashaddr}
           autogenerateMnemonic={this.autogenerateMnemonic}
           autogeneratePath={this.autogeneratePath}
           handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
@@ -355,6 +345,7 @@ class App extends Component {
           handlePathChange={this.handlePathChange.bind(this)}
           handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
           handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
+          handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
         />
       );
     };
@@ -434,6 +425,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/blocks" component={BlocksPage}/>
             <Route path="/blocks/:block_id" component={BlockPage}/>
+            <Route path="/addresses/:address_id" component={AddressPage}/>
             <Route path="/transactions" component={TransactionsPage}/>
             <Route path="/configuration" component={ConfigurationPage}/>
             <Route exact path="/" component={WalletPage}/>

@@ -39,6 +39,10 @@ class Configuration extends Component {
     this.props.handleAutoGeneratePathChange(autogeneratePath);
   }
 
+  handleDisplayCashaddrChange(displayCashaddr) {
+    this.props.handleDisplayCashaddrChange(displayCashaddr);
+  }
+
   render() {
 
     if (this.state.redirect) {
@@ -54,9 +58,11 @@ class Configuration extends Component {
           handlePathChange={this.handlePathChange.bind(this)}
           handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
           handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
+          handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
           totalAccounts={this.props.totalAccounts}
           mnemonic={this.props.mnemonic}
           path={this.props.path}
+          displayCashaddr={this.props.displayCashaddr}
           autogenerateMnemonic={this.props.autogenerateMnemonic}
           autogeneratePath={this.props.autogeneratePath}
           resetBitbox={this.resetBitbox.bind(this)}

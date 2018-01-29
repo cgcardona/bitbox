@@ -9,7 +9,8 @@ class AccountsAndKeys extends Component {
       path: this.props.path,
       totalAccounts: this.props.totalAccounts,
       autogenerateMnemonic: this.props.autogenerateMnemonic,
-      autogeneratePath: this.props.autogeneratePath
+      autogeneratePath: this.props.autogeneratePath,
+      displayCashaddr: this.props.displayCashaddr
     }
   }
 
@@ -65,6 +66,14 @@ class AccountsAndKeys extends Component {
    this.props.handleAutoGeneratePathChange(value);
   }
 
+  handleDisplayCashaddrChange(e) {
+    let value = e.target.checked;
+    this.setState({
+      displayCashaddr: value
+    })
+   this.props.handleDisplayCashaddrChange(value);
+  }
+
   render() {
         // <p id='newRobotName'>Name: <input type='text' placeholder="Robot Name" value={this.state.robotName} onChange={this.handleRobotNameChange.bind(this)} /></p>
     let customMnemonicLabel;
@@ -90,7 +99,6 @@ class AccountsAndKeys extends Component {
               <fieldset>
                 <button className="pure-button" onClick={this.props.resetBitbox.bind(this)}><i className="fas fa-redo" /> Restart</button>
 
-
                 <label>Total number of accounts to generate</label>
                 <input type='number' placeholder="Number of accounts" value={this.state.totalAccounts} onChange={this.handleTotalAccountsChange.bind(this)} />
 
@@ -104,6 +112,9 @@ class AccountsAndKeys extends Component {
 
                 {customPathLabel}
                 {customPath}
+
+                <label>Display in Cashaddr format</label>
+                <input type="checkbox" checked={this.state.displayCashaddr} onChange={this.handleDisplayCashaddrChange.bind(this)} />
               </fieldset>
             </form>
           </div>

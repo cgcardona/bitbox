@@ -33,7 +33,7 @@ class Wallet extends Component {
             key={index}
             balance={balance}
             transactionsCount={transactionsCount}
-            // showKey={this.showKey.bind(this)}
+            displayCashaddr={this.props.displayCashaddr}
           />
         );
       });

@@ -457,8 +457,9 @@ a.pure-button-primary {
   cursor: pointer;
 }
 
-.Blocks tr:hover {
+tr.AddressDetails:hover, .Blocks tr:hover {
   background: #eee;
+  cursor: pointer;
 }
 
 .Blocks tr:hover td:first-of-type {
