@@ -1,22 +1,23 @@
 import BlockHeader from './BlockHeader';
 import SHA256 from "crypto-js/sha256";
-import crypto from 'crypto';
+import Crypto from '../utilities/Crypto';
 
 class Block {
   constructor(blockData) {
+    // console.log(blockData);
     this.index = blockData.index;
-    this.transactions = blockData.transactions;
-    this.nonce = 0;
-    this.transactionCounter = 0;
     this.magicNo = '0xD9B4BEF9';
     this.blocksize = 0;
-    this.timestamp = blockData.timestamp;
+    this.nonce = blockData.nonce;
+    this.transactionCounter = blockData.transactions.length;
+    this.transactions = blockData.transactions;
+    this.timestamp = blockData.time;
 
     let blockHeaderData = {
       hashPrevBlock: blockData.previousHash,
       nonce: this.nonce,
-      time: blockData.timestamp,
-      bits: 0,
+      time: blockData.time,
+      bits: blockData.bits,
       hashMerkleRoot: this.calculateMerkle()
     };
     this.blockheader = new BlockHeader(blockHeaderData);
@@ -30,7 +31,7 @@ class Block {
 
     let fastRoot = require('merkle-lib/fastRoot');
     let root = fastRoot(data, (data) => {
-      return crypto.createHash('sha256').update(data).digest();
+      return Crypto.createSHA256Hash(data);
     });
     return root.toString('hex');
   }

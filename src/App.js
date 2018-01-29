@@ -13,6 +13,9 @@ import {
 import Blockchain from './models/Blockchain';
 import Address from './models/Address';
 import Block from './models/Block';
+import Transaction from './models/Transaction';
+import Input from './models/Input';
+import Output from './models/Output';
 
 // custom components
 import Wallet from './components/Wallet';
@@ -22,10 +25,12 @@ import Transactions from './components/Transactions';
 import Utxo from './models/Utxo';
 import Configuration from './components/Configuration';
 
+// utilities
+import Crypto from './utilities/Crypto';
+
 // npm libs
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
-import crypto from 'crypto';
 import bchaddr from 'bchaddrjs';
 
 // css
@@ -73,9 +78,7 @@ class App extends Component {
 
   createHDWallet(config) {
     if(!config.mnemonic && config.autogenerateMnemonic) {
-      config.mnemonic = BIP39.entropyToMnemonic(
-        crypto.randomBytes(16).toString('hex'),
-      );
+      config.mnemonic = BIP39.entropyToMnemonic(Crypto.randomBytes());
     }
 
     if((!config.path && config.autogeneratePath) || !this.path) {
@@ -98,7 +101,8 @@ class App extends Component {
 
     const addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
-      addresses.push(new Address(bchaddr.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
+      addresses.push(new Address(account.derive(i).getAddress(), account.derive(i).keyPair.toWIF()));
+      // addresses.push(new Address(bchaddr.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
     this.setState({
@@ -106,24 +110,90 @@ class App extends Component {
       path: config.path,
       addresses: addresses,
     });
-    this.createBlockchain(addresses[0].publicKey);
+    this.createBlockchain(addresses);
   }
 
-  createBlockchain(coinbaseAddress) {
-    let genesisTx = [{
-      sender: 'coinbase',
-      receiver: coinbaseAddress,
-      amount: 12.5,
-      timestamp: Date.now()
-    }];
+  rng() {
+    return Buffer.from('YT8dAtK4d16A3P1z+TpwB2jJ4aFH3g9M1EioIBkLEV4=', 'base64')
+  }
+
+  createBlockchain(addresses) {
+
+    //
+    // // create new tx
+    // let owner = Bitcoin.ECPair.fromWIF(addresses[1].privateKey);
+    // let newTxb = new Bitcoin.TransactionBuilder();
+    //
+    // newTxb.addInput(txHash, 0);
+    // newTxb.addOutput(addresses[2].publicKey, 12000);
+    // newTxb.sign(0, owner)
+    // let newTxHex = newTxb.build().toHex();
+    // console.log(newTxHex);
+
+    // let testnet = Bitcoin.networks.testnet;
+    // var txb = new Bitcoin.TransactionBuilder(testnet)
+    // var alice1 = Bitcoin.ECPair.makeRandom({ network: testnet })
+    // var aliceChange = Bitcoin.ECPair.makeRandom({ rng: this.rng, network: testnet })
+    //
+    //
+    // console.log(alice1, aliceChange);
+
+    // GetHash()      =
+    // hashMerkleRoot = 0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b
+    // txNew.vin[0].scriptSig     = 486604799 4 0x736B6E616220726F662074756F6C69616220646E6F63657320666F206B6E697262206E6F20726F6C6C65636E61684320393030322F6E614A2F33302073656D695420656854
+    // txNew.vout[0].nValue       = 5000000000
+    // txNew.vout[0].scriptPubKey = 0x5F1DF16B2B704C8A578D0BBAF74D385CDE12C11EE50455F3C438EF4C3FBCF649B6DE611FEAE06279A60939E028A8D65C10B73071A6F16719274855FEB0FD8A6704 OP_CHECKSIG
+    // block.nVersion = 1
+    // block.nTime    = 1231006505
+    // block.nBits    = 0x1d00ffff
+    // block.nNonce   = 2083236893
+    //
+    //
+    // CBlock(hash=000000000019d6, ver=1, hashPrevBlock=00000000000000, hashMerkleRoot=4a5e1e, nTime=1231006505, nBits=1d00ffff, nNonce=2083236893, vtx=1)
+    //   CTransaction(hash=4a5e1e, ver=1, vin.size=1, vout.size=1, nLockTime=0)
+    //     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73)
+    //     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
+    // vMerkleTree: 4a5e1e
+
+    let genesisTx = new Transaction({
+      versionNumber: 1,
+      inputs: [],
+      outputs: [addresses[0] ],
+      time: Date.now()
+    }, true);
+
     let genesisBlock = {
+      hash: '0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
+      version: 1,
+      hashPrevBlock: '00000000000000',
+      hashMerkleRoot: '0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
+      time: 1231006505,
+      bits: '0x1d00ffff',
+      nonce: '2083236893',
+      vtx: 1,
+
       index: 0,
-      timestamp: Date.now(),
-      transactions: genesisTx,
-      previousHash: '0'
+      transactions: [genesisTx],
+      previousHash: '00000000000000'
     };
     let blockchainInstance = new Blockchain(genesisBlock);
-    let utxoSet = new Utxo(genesisTx[0].receiver, genesisTx[0].amount);
+
+    let utxoSet = new Utxo(genesisBlock.transactions[0].receiver, genesisBlock.transactions[0].amount);
+    // console.log(blockchainInstance);
+    let coinbase = Bitcoin.ECPair.fromWIF(addresses[0].privateKey);
+    let txb = new Bitcoin.TransactionBuilder();
+
+    // console.log(genesisTx.createTransactionHash(genesisTx));
+    txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
+    // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
+    txb.addOutput(addresses[1].publicKey, 12000);
+
+    txb.sign(0, coinbase)
+    let txHex = txb.build().toHex();
+    // console.log(txHex)
+    let txHash = Crypto.createSHA256Hash(txHex);
+    // console.log(txHash);
+
     this.handleBlockchainUpdate(blockchainInstance);
     this.handleUtxoUpdate(utxoSet);
   }
@@ -189,23 +259,25 @@ class App extends Component {
   createBlock() {
     let blockchainInstance = this.state.blockchainInstance;
 
-    let tx = [{
+    let tx = {
+      inputs: [],
+      outputs: [],
       sender: 'coinbase',
       receiver: this.state.addresses[0].publicKey,
       amount: 12.5,
       timestamp: Date.now()
-    }];
+    };
 
     let block = {
       index: blockchainInstance.chain.length,
       timestamp: Date.now(),
-      transactions: tx,
+      transactions: [tx],
       previousHash: blockchainInstance.getLatestBlock().blockheader.hashMerkleRoot
     };
 
     blockchainInstance.addBlock(new Block(block));
     this.handleBlockchainUpdate(blockchainInstance);
-    this.updateUtxo(tx[0].receiver, tx[0].amount);
+    this.updateUtxo(tx.receiver, tx.amount);
   }
 
   updateUtxo(receiver, amount) {
