@@ -27,11 +27,7 @@ import Configuration from './components/Configuration';
 
 // utilities
 import Crypto from './utilities/Crypto';
-
-// npm libs
-import Bitcoin from 'bitcoinjs-lib';
-import BIP39 from 'bip39';
-import bchaddr from 'bchaddrjs';
+import BitcoinCash from './utilities/BitcoinCash';
 
 // css
 import './App.css';
@@ -78,7 +74,7 @@ class App extends Component {
 
   createHDWallet(config) {
     if(!config.mnemonic && config.autogenerateMnemonic) {
-      config.mnemonic = BIP39.entropyToMnemonic(Crypto.randomBytes());
+      config.mnemonic = BitcoinCash.entropyToMnemonic();
     }
 
     if((!config.path && config.autogeneratePath) || !this.path) {
@@ -94,15 +90,15 @@ class App extends Component {
       config.path = this.path;
     }
 
-    const seed = BIP39.mnemonicToSeed(config.mnemonic, '');
-    const masterkey = Bitcoin.HDNode.fromSeedBuffer(seed, Bitcoin.networks[this.state.configuration.wallet.network]);
+    const seed = BitcoinCash.mnemonicToSeed(config.mnemonic);
+    const masterkey = BitcoinCash.fromSeedBuffer(seed);
 
     const account = masterkey.derivePath(config.path);
 
     const addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
       addresses.push(new Address(account.derive(i).getAddress(), account.derive(i).keyPair.toWIF()));
-      // addresses.push(new Address(bchaddr.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
+      // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
     this.setState({
@@ -180,8 +176,8 @@ class App extends Component {
 
     let utxoSet = new Utxo(genesisBlock.transactions[0].receiver, genesisBlock.transactions[0].amount);
     // console.log(blockchainInstance);
-    let coinbase = Bitcoin.ECPair.fromWIF(addresses[0].privateKey);
-    let txb = new Bitcoin.TransactionBuilder();
+    let coinbase = BitcoinCash.fromWIF(addresses[0].privateKey);
+    let txb = BitcoinCash.transactionBuilder();
 
     // console.log(genesisTx.createTransactionHash(genesisTx));
     txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
