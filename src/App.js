@@ -21,7 +21,7 @@ import Output from './models/Output';
 import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
-import AddressDetails from './components/AddressDetails';
+// import AddressDetails from './components/AddressDetails';
 import Transactions from './components/Transactions';
 import Utxo from './models/Utxo';
 import Configuration from './components/Configuration';
@@ -84,7 +84,7 @@ class App extends Component {
 
     //
     // // create new tx
-    // let owner = Bitcoin.ECPair.fromWIF(addresses[1].privateKey);
+    // let owner = Bitcoin.ECPair.fromWIF(addresses[1].privateKeyWIF);
     // let newTxb = new Bitcoin.TransactionBuilder();
     //
     // newTxb.addInput(txHash, 0);
@@ -117,12 +117,22 @@ class App extends Component {
     //     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73)
     //     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
     // vMerkleTree: 4a5e1e
+    let keyPair = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
+    let address = keyPair.getAddress();
+    let ripemd160 = Crypto.createRIPEMD160Hash(address);
+    // let sha256 = ;
+    // let coinbaseTransactionHash = Crypto.createSHA256Hash(coinbaseTransaction.toHex());
+    let output = new Output({
+      value: 5000000000,
+      ripemd160: ripemd160
+    });
 
     let genesisTx = new Transaction({
       versionNumber: 1,
       inputs: [],
-      outputs: [addresses[0] ],
-      time: Date.now()
+      outputs: [output],
+      time: Date.now(),
+      address: address
     }, true);
 
     let genesisBlock = {
@@ -134,27 +144,26 @@ class App extends Component {
       bits: '0x1d00ffff',
       nonce: '2083236893',
       vtx: 1,
-
       index: 0,
       transactions: [genesisTx],
       previousHash: '00000000000000'
     };
     let blockchainInstance = new Blockchain(genesisBlock);
 
-    let utxoSet = new Utxo(genesisBlock.transactions[0].receiver, genesisBlock.transactions[0].amount);
-    // console.log(blockchainInstance);
-    let coinbase = BitcoinCash.fromWIF(addresses[0].privateKey);
-    let txb = BitcoinCash.transactionBuilder();
-
-    // console.log(genesisTx.createTransactionHash(genesisTx));
-    txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
-    // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
-    txb.addOutput(addresses[1].publicKey, 12000);
-
-    txb.sign(0, coinbase)
-    let txHex = txb.build().toHex();
-    // console.log(txHex)
-    let txHash = Crypto.createSHA256Hash(txHex);
+    let utxoSet = new Utxo(address, genesisBlock.transactions[0].outputs[0].value);
+    // console.log(utxoSet);
+    // let coinbase = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
+    // let txb = BitcoinCash.transactionBuilder();
+    //
+    // // console.log(genesisTx.createTransactionHash(genesisTx));
+    // txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
+    // // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
+    // txb.addOutput(addresses[1].publicKey, 12000);
+    //
+    // txb.sign(0, coinbase)
+    // let txHex = txb.build().toHex();
+    // // console.log(txHex)
+    // let txHash = Crypto.createSHA256Hash(txHex);
     // console.log(txHash);
 
     this.handleBlockchainUpdate(blockchainInstance);
@@ -311,15 +320,15 @@ class App extends Component {
         />
       );
     };
-
-    const AddressPage = (props) => {
-      return (
-        <AddressDetails
-          blockchainInstance={this.state.blockchainInstance}
-          match={props.match}
-        />
-      );
-    };
+    //
+    // const AddressPage = (props) => {
+    //   return (
+    //     <AddressDetails
+    //       blockchainInstance={this.state.blockchainInstance}
+    //       match={props.match}
+    //     />
+    //   );
+    // };
 
     const TransactionsPage = (props) => {
       return (
@@ -354,6 +363,7 @@ class App extends Component {
       chainlength = this.state.blockchainInstance.chain.length - 1;
     }
 
+    // <Route path="/addresses/:address_id" component={AddressPage}/>
     return (
       <Router>
         <div>
@@ -425,7 +435,6 @@ class App extends Component {
           <Switch>
             <Route exact path="/blocks" component={BlocksPage}/>
             <Route path="/blocks/:block_id" component={BlockPage}/>
-            <Route path="/addresses/:address_id" component={AddressPage}/>
             <Route path="/transactions" component={TransactionsPage}/>
             <Route path="/configuration" component={ConfigurationPage}/>
             <Route exact path="/" component={WalletPage}/>

@@ -1,4 +1,4 @@
-import Bitcoin from 'bitcoinjs-lib';
+import BitcoinCash from '../utilities/BitcoinCash';
 import Crypto from '../utilities/Crypto';
 
 class Transaction {
@@ -11,17 +11,18 @@ class Transaction {
     this.lockTime = transactionData.time;
 
     if(isCoinbase) {
-      this.createCoinbaseTransaction();
+      this.createCoinbaseTransaction(transactionData.address);
     }
   }
 
-  createCoinbaseTransaction() {
-    let coinbaseTransaction = new Bitcoin.Transaction();
+
+  createCoinbaseTransaction(address) {
+    let coinbaseTransaction = new BitcoinCash.transaction();
     coinbaseTransaction.addInput(new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex'), 0);
-    coinbaseTransaction.addOutput(new Buffer(this.outputs[0].publicKey, 'hex'), 5000000000);
+    coinbaseTransaction.addOutput(new Buffer(address, 'hex'), 5000000000);
     // console.log(coinbaseTransaction.isCoinbase());
-      let coinbaseTransactionHash = Crypto.createSHA256Hash(coinbaseTransaction.toHex());
-    console.log(coinbaseTransactionHash);
+    let coinbaseTransactionHash = Crypto.createSHA256Hash(coinbaseTransaction.toHex());
+    // console.log(coinbaseTransactionHash);
   }
 }
 

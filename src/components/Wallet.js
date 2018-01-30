@@ -1,24 +1,32 @@
 import React, { Component } from 'react';
+import BitcoinCash from '../utilities/BitcoinCash';
+import Crypto from '../utilities/Crypto';
 import AddressDetails from './AddressDetails';
 import _ from 'underscore';
 
 class Wallet extends Component {
   render() {
+    // console.log(this.props.utxoSet);
     let list = [];
     if (this.props.addresses.length) {
       this.props.addresses.forEach((address, index) => {
         // get balances
-        let outputs = _.where(this.props.utxoSet.outputs, {receiver: address.publicKey});
+        let publicKey = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
+        let ripemd160 = Crypto.createRIPEMD160Hash(publicKey);
+
+        let outputs = _.where(this.props.utxoSet.outputs, {address: publicKey});
         let balance = 0;
          _.each(outputs, (output, index) => {
-           balance += output.amount;
+           balance += output.value;
          });
 
         // get transactions
         let transactions = [];
         _.each(this.props.blockchainInstance.chain, (block, index) => {
-          transactions.push(_.where(block.transactions, {sender: address.publicKey}));
-          transactions.push(_.where(block.transactions, {receiver: address.publicKey}));
+          _.each(block.transactions, (transaction, index) => {
+            transactions.push(_.where(transaction.inputs, {ripemd160: ripemd160}));
+            transactions.push(_.where(transaction.outputs, {ripemd160: ripemd160}));
+          });
         });
 
         let transactionsCount = 0;

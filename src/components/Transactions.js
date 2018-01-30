@@ -4,7 +4,7 @@ import Bitcoin from 'bitcoinjs-lib';
 class Transactions extends Component {
   render() {
     if(this.props.addresses.length) {
-      var alice = Bitcoin.ECPair.fromWIF(this.props.addresses[0].privateKey)
+      var alice = Bitcoin.ECPair.fromWIF(this.props.addresses[0].privateKeyWIF)
       var txb = new Bitcoin.TransactionBuilder()
 
       txb.addInput('0000000000000000000000000000000000000000000000000000000000000001', 0);
@@ -12,7 +12,7 @@ class Transactions extends Component {
       // (in)15000 - (out)12000 = (fee)3000, this is the miner fee
 
       txb.sign(0, alice);
-      console.log(txb.build().toHex());
+      // console.log(txb.build().toHex());
     }
     // console.log(tx.sign(0, key));
     // if(this.props.addresses.length) {

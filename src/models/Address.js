@@ -1,8 +1,7 @@
 
 class Address {
-  constructor(publicKey, privateKey) {
-    this.publicKey = publicKey;
-    this.privateKey = privateKey;
+  constructor(privateKeyWIF) {
+    this.privateKeyWIF = privateKeyWIF;
   }
 }
 

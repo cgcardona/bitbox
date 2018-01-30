@@ -1,8 +1,11 @@
 import Address from '../models/Address';
 import Crypto from './Crypto';
+
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
 import bchaddr from 'bchaddrjs';
+import sb from 'satoshi-bitcoin';
+
 
 class BitcoinCash {
   // Utility class to wrap the following bitcoin related npm packages
@@ -13,6 +16,16 @@ class BitcoinCash {
   static Format = bchaddr.Format; // Legacy, Bitpay or Cashaddr.
   static Network = bchaddr.Network; // Mainnet or Testnet.
   static Type = bchaddr.Type; // P2PKH or P2SH.
+
+  // Translate coins to satoshi value
+  static toSatoshi(coins) {
+    return sb.toSatoshi(coins);
+  }
+
+  // Translate satoshi to coin value
+  static toBitcoinCash(satoshis) {
+    return sb.toBitcoin(satoshis);
+  }
 
   // Translate address from any address format into a specific format.
   static toLegacyAddress(address) {
@@ -85,8 +98,12 @@ class BitcoinCash {
     return Bitcoin.HDNode.fromSeedBuffer(seed, Bitcoin.networks['bitcoin']);
   }
 
-  static fromWIF(privateKey) {
-    return Bitcoin.ECPair.fromWIF(privateKey);
+  static fromWIF(privateKeyWIF) {
+    return Bitcoin.ECPair.fromWIF(privateKeyWIF);
+  }
+
+  static transaction() {
+    return new Bitcoin.Transaction();
   }
 
   static transactionBuilder() {
@@ -118,7 +135,7 @@ class BitcoinCash {
 
     const addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
-      addresses.push(new Address(account.derive(i).getAddress(), account.derive(i).keyPair.toWIF()));
+      addresses.push(new Address(account.derive(i).keyPair.toWIF()));
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 

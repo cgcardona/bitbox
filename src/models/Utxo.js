@@ -1,16 +1,16 @@
 class Utxo {
-  constructor(receiver, amount) {
+  constructor(address, value) {
     this.outputs = [{
-      receiver: receiver,
-      amount: amount
+      address: address,
+      value: value
     }];
   }
 
-  addUtxo(receiver, amount) {
+  addUtxo(address, value) {
     let outputs = this.outputs;
     outputs.push({
-      receiver: receiver,
-      amount: amount
+      address: address,
+      value: value
     })
   }
 }
